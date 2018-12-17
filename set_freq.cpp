@@ -21,22 +21,30 @@ int main(int argc, char **argv)
   ROS_INFO("START");
   
   ros::NodeHandle n;
+  ros::Rate oneSecond(1);
 
-  ros::Publisher set = n.advertise<std_msgs::Float64>("set_freq", 1000);
-  std_msgs::Float64 freq;
   
-  freq.data=atof(argv[1]);
+  std_msgs::Float64 freq;
 
+  //bool var=true;
+  freq.data=atof(argv[1]);
+  //set.publish(freq);
   while(ros::ok())
   {
+    ros::Publisher set = n.advertise<std_msgs::Float64>("set_freq", 1000);
+    oneSecond.sleep();
     //ros::Rate loop_rate(1);
 
     //freq.data=freq.data*10;*/
 
     //ROS_INFO("pre %lf",freq.data);
-  
+    
     set.publish(freq);
-
+    oneSecond.sleep();
+    //set.shutdown();
+    
+    ros::shutdown();
+    //var=false;
     //c++;
     //ros::spin();
     //ros::spinOnce();
@@ -44,7 +52,7 @@ int main(int argc, char **argv)
     //loop_rate.sleep();
   }
 
-  ROS_INFO("post %lf",freq.data);
+  ROS_INFO("fine %lf",freq.data);
   return 0;
 }
 

@@ -12,7 +12,7 @@ float f=0.1;
 
 void set_frequenza(const std_msgs::Float64& msg)
 {
-  //ROS_INFO("I heard: [%lf]", msg.data);
+  ROS_INFO("I heard: [%lf]", msg.data);
   f=msg.data;
 }
 
@@ -32,8 +32,15 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  ros::Publisher pub = n.advertise<sensor_msgs::Temperature>("temp_sensor", 1000);
+  ros::Rate oneSecond(1);
 
+  
+
+  ros::Publisher pub = n.advertise<sensor_msgs::Temperature>("temp_sensor", 1000);
+ 
+  oneSecond.sleep();
+
+  ros::Subscriber set = n.subscribe("set_freq", 1000, set_frequenza);
   /*ros::Subscriber sub1 = n.subscribe("temp_sensor", 1000, set_freq);
   ros::ServiceClient client = n.serviceClient<beginner_tutorials::prova>("add_two_ints");
   double x=1;
@@ -53,21 +60,25 @@ int main(int argc, char **argv)
   //ros::spin();
   
 
-  ros::Subscriber set = n.subscribe("set_freq", 1000, set_frequenza);
+  //ros::Subscriber set = n.subscribe("set_freq", 1000, set_frequenza);
+
+  sensor_msgs::Temperature temp;
+  //temp.temperature=NULL;
 
   //ROS_INFO("set %lf", set);
   while (ros::ok())
   {
+    
     ros::Rate loop_rate(f);
     
     /*std::stringstream ss;
     ss << "ciao " << count;
     msg.data = ss.str();*/
      ROS_INFO("frequenza= %lf", f);
-    sensor_msgs::Temperature temp;
-
-    temp.temperature = (float)(rand()%15) + (float)rand() / (float)RAND_MAX;;
+    temp.temperature = (float)(rand()%15) + (float)rand() / (float)RAND_MAX;
     pub.publish(temp);
+    
+    //pub.publish(temp);
 
     ROS_INFO("%lf", temp.temperature);
     

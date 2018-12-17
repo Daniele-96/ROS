@@ -15,6 +15,7 @@ bool set_min=true;
 
 void Callback(const sensor_msgs::Temperature& msg)
 {
+  ROS_INFO("I heard: [%lf]", msg.temperature);
   if(set_min)
   {
     min=msg.temperature;
