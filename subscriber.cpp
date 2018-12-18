@@ -1,9 +1,5 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Temperature.h"
-//#include "std_msgs/String.h"
-//#include "beginner_tutorials/AddTwoInts.h"
-//#include "beginner_tutorials/prova.h"
-//#include "beginner_tutorials/random_numbers.h"
 #include <cstdlib>
 
 int count=1;
@@ -13,9 +9,9 @@ double max=0.0;
 double min=0.0;
 bool set_min=true;
 
+/* Funzione di callback che viene richiamata quando arriva un messaggio sul topic temp_sensor. Si occupa di svolgere le operazioni di calcolo una volta che riceve dei messaggi da parte del publisher. Calcola massimo, minimo e media delle temperature ricevute */
 void Callback(const sensor_msgs::Temperature& msg)
 {
-  //ROS_INFO("I heard: [%lf]", msg.temperature);
   if(set_min)
   {
     min=msg.temperature;
@@ -37,66 +33,29 @@ void Callback(const sensor_msgs::Temperature& msg)
 
   if(count%5==0)
   {
-     //ROS_INFO("I heard: [%s]", msg.header);
-     //ROS_INFO("I heard: [%lf]", msg.temperature);
+     ROS_INFO("Misura numero %d", count);
 
      ROS_INFO("La temperatura massima e' %lf", max);
 
      ROS_INFO("La temperatura minima e' %lf", min);
 
-     ROS_INFO("La temperatura media e' %lf", avg_fin);
+     ROS_INFO("La temperatura media e' %lf\n", avg_fin);
   }
 
   count++;
 }
 
-/*bool add(beginner_tutorials::AddTwoInts::Request  &req, beginner_tutorials::AddTwoInts::Response &res, beginner_tutorials::prova::Request &pro, beginner_tutorials::prova::Response &prov)
-{
-  prov.ret=0;
-  if(pro.count==4)
-  {
-    ROS_INFO("La temperatura attueale e': %lf", pro.temp);
-    prov.ret=1;
-
-    if(pro.temp>pro.max)
-    {
-      pro.max=pro.temp;
-    }
-    ROS_INFO("La temperatura massima e' %d", pro.max);
-
-    if(pro.temp<pro.min)
-    {
-      pro.min=pro.temp;
-    }
-    ROS_INFO("La temperatura minima e' %d", pro.min);
-  }
-
-  
-  
-  return true;
-}*/
-
-
-
-
 int main(int argc, char **argv)
 {
-  
-  //ros::init(argc, argv, "add_two_ints_server");
+  /* Inizializzazione e assegnazione univoca del nome del nodo */
   ros::init(argc, argv, "sub");
   ROS_INFO("START");
   ros::NodeHandle n;
 
+  /* Definizione del subscriber e del topic temp_sensor dal quale riceve i messaggi di tipo sensor_msgs/Temperature. Ogni volta che riceve un messaggio chiamerà la funzione Callback */
   ros::Subscriber sub = n.subscribe("temp_sensor", 1000, Callback);
 
-  //ros::ServiceServer service = n.advertiseService("add_two_ints", add);
-  //c++;
-
   ros::spin();
-
-  /*ros::ServiceServer service = n.advertiseService("add_two_ints", add);
-  ROS_INFO("Ready to add two ints.");
-  ros::spin();*/
 
   return 0;
 }
